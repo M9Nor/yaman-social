@@ -1,7 +1,26 @@
+// ======================================================
+// ملف: mainLogic.js
+// الغرض العام:
+// - يضم الدوال المشتركة بين الصفحات (Home, Profile, Post Details).
+// - يتكفّل بعمليات المصادقة (تسجيل الدخول/التسجيل/الخروج).
+// - يضبط عناصر الواجهة بحسب حالة المستخدم (ضيف/مسجل دخول).
+// - يوفّر دوال التعامل مع البوستات (إنشاء/تعديل/حذف) بشكل مشترك.
+// ملاحظات مهمة:
+// - عنوان الـ API محدد في المتغيّر `urlTrmeez`.
+// - استخدمنا تعليقات مُجزّأة لشرح كل قسم بشكل فقرة واضحة.
+// ======================================================
 
 // هي الصفحة مشتركة بين كل الصفحات في الدوال
 let urlTrmeez = "https://tarmeezacademy.com/api/v1"
 signInUser()
+
+// ------------------------------------------------------
+// قسم: إنشاء/تعديل البوست (CreatePostBtn)
+// الهدف:
+// - يقرأ مدخلات المودال ويقرر إن كان الطلب إنشاء جديد أم تحديث.
+// - يرسل الطلب عبر FormData مع دعم الصورة إن وُجدت.
+// - يعالج الواجهة: إظهار/إخفاء اللودر، إغلاق المودال، تنبيهات النجاح/الفشل، ثم إعادة تحميل البيانات.
+// ------------------------------------------------------
 function CreatePostBtn(){
         console.log('[CreatePostBtn] clicked')
         const Title = document.getElementById("title-input").value
@@ -68,7 +87,11 @@ function CreatePostBtn(){
 
 }
 
-// Shared: open modal to add a new post (Home and Profile)
+// ------------------------------------------------------
+// قسم: فتح مودال إضافة بوست جديد (مشترك Home & Profile)
+// فكرة الدالة:
+// - تصفير الحقول، تعيين النصوص الافتراضية، ثم إظهار المودال بأمان إذا كان Bootstrap متاحاً.
+// ------------------------------------------------------
 function addPostBtn(){
   console.log('[addPostBtn] open modal')
   const titleEl = document.getElementById("title-input")
@@ -88,6 +111,12 @@ function addPostBtn(){
   }
 }
 
+// ------------------------------------------------------
+// قسم: تعديل وحذف البوست
+// - EditBtnClicked: يملأ المودال ببيانات البوست ويعرضه بوضعية التعديل.
+// - DeleteBtnPost: يفتح مودال الحذف ويخزن المعرّف داخله بمدخل مخفي.
+// - confirmPostDelete: يرسل طلب الحذف ويحدّث الواجهة بحسب النتيجة.
+// ------------------------------------------------------
 function EditBtnClicked(postobject){
       let post = JSON.parse(decodeURIComponent(postobject))
 
@@ -164,6 +193,11 @@ function confirmPostDelete(){
 
 }
 
+// ------------------------------------------------------
+// قسم: الانتقال إلى صفحة البروفايل الخاص بالمستخدم الحالي
+// - إن لم يكن مسجلاً: نظهر تنبيه ونفتح مودال تسجيل الدخول.
+// - إن كان مسجلاً: نعيد توجيهه إلى `profile.html?userId=...`.
+// ------------------------------------------------------
 function profilePageClicked(){
     const user = CurrentUser()
     if(!user){
@@ -181,6 +215,12 @@ function profilePageClicked(){
 }
 
 
+// ------------------------------------------------------
+// قسم: signInUser
+// الهدف:
+// - يعكس حالة المصادقة على عناصر الواجهة: إظهار أزرار الدخول/الخروج والصورة واسم المستخدم.
+// - يُظهر زر الإضافة فقط للمستخدمين المسجّلين.
+// ------------------------------------------------------
   function signInUser(){
             const LoginDiv = document.getElementById("Logged_in_successfully")
             const LogOutDiv = document.getElementById("Login_Unsuccessful")
@@ -209,7 +249,12 @@ function profilePageClicked(){
 
 
 
-// ======= AUTH FUNCTIONS ==========
+// ================= AUTH FUNCTIONS =====================
+// قسم: المصادقة (تسجيل الدخول/التسجيل/الخروج)
+// - loginbtn: إرسال بيانات الدخول وتخزين التوكين والمستخدم ثم تحديث الواجهة.
+// - Registerloginbtn: إرسال بيانات التسجيل مع الصورة، وتوليد اسم مستخدم فريد.
+// - logOut: مسح بيانات المستخدم من التخزين المحلي وتحديث الواجهة.
+// ======================================================
 
 function  loginbtn(){
     let username_input = document.getElementById("username-input").value
@@ -311,6 +356,12 @@ function logOut(){
 }
 
 
+// ------------------------------------------------------
+// قسم: أدوات مساعدة للواجهة
+// - appendAlert(message, type): عرض تنبيه مؤقت أسفل يمين الشاشة.
+// - CurrentUser(): قراءة المستخدم المخزّن في LocalStorage وإرجاعه ككائن.
+// - toggleloader(show): إظهار/إخفاء اللودر إذا كان موجوداً في الصفحة.
+// ------------------------------------------------------
 function appendAlert(message, type) {
     const alertPlaceholder = document.getElementById('liveAlertPlaceholder');
     const wrapper = document.createElement('div');
@@ -345,7 +396,7 @@ if (userStorage !== null){
 
 
 
-// shared safe loader toggle (no-op if #loder is missing on the page)
+// ملاحظة: إظهار/إخفاء اللودر بشكل آمن (لا يفعل شيئاً إن لم يوجد العنصر)
 function toggleloader(show = true){
   const el = document.getElementById("loder")
   if(!el){
@@ -358,7 +409,7 @@ function toggleloader(show = true){
   }
 }
 
-// Ensure UI reflects auth state once DOM is ready (e.g., #addbtn presence)
+// عند جاهزية الـ DOM: نحاول تحديث الواجهة لتعكس حالة المصادقة (مثلاً وجود زر الإضافة)
 document.addEventListener('DOMContentLoaded', () => {
   try { signInUser() } catch (e) { /* no-op */ }
 })

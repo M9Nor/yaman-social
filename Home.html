@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <!-- ======================================================
+         ملف: Home.html
+         الغرض:
+         - الصفحة الرئيسية لعرض قائمة البوستات.
+         - تحتوي على مودالات الدخول/التسجيل وإنشاء/حذف بوست.
+         - تدمج Bootstrap و Axios وتحمّل سكربتات المنطق المشتركة.
+         ملاحظات:
+         - تم تنظيم التعليقات كفقرات لشرح أقسام الصفحة بوضوح.
+       ====================================================== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
@@ -11,6 +20,7 @@
 
     <title>Document</title>
 </head>
+<!-- قسم: التنسيقات العامة واللودر -->
 <style>
     body {
         background-color: rgb(132, 90, 157);
@@ -41,17 +51,18 @@
 </style>
 
 <body>
-    <!-- LOADER -->
+    <!-- قسم: اللودر (مؤشر التحميل) -->
     <div
         style="  top:50%;  left:50%; position: fixed ;  transform: translate(-50%, -50%);z-index: 99999; display: flex;justify-content: center; align-items: center;width: 100px;height: 100px;">
         <div class="loader" id="loder"></div>
     </div>
-    <!-- // LOADER // -->
-    <!-- ALERT -->
-    <div id="liveAlertPlaceholder" style="position:fixed; right:0 ; bottom: 0; z-index: 99999; width:30%"></div>
-    <!-- // ALERT // -->
+    <!-- // نهاية قسم اللودر // -->
 
-    <!-- MODALS -->
+    <!-- قسم: منطقة التنبيهات (Alerts) -->
+    <div id="liveAlertPlaceholder" style="position:fixed; right:0 ; bottom: 0; z-index: 99999; width:30%"></div>
+    <!-- // نهاية قسم التنبيهات // -->
+
+    <!-- قسم: المودالات (Login/Register/New Post/Delete) -->
     <!-- Login Modal  -->
     <div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog ">
@@ -185,8 +196,9 @@
             </div>
         </div>
     </div>
-    <!-- // Delete Post Modal // -->
-    <!-- NAVBAR -->
+    <!-- // نهاية مودال حذف البوست // -->
+
+    <!-- قسم: شريط التنقل (Navbar) -->
     <div class="container">
         <div id="nav" class=" d-flex justify-content-center  mt-1  fs-4">
             <div class="col-9 ">
@@ -242,9 +254,9 @@
             </div>
         </div>
     </div>
-    <!--  // NAVBAR //-->
+    <!--  // نهاية قسم شريط التنقل //-->
 
-    <!-- MAIN CONTENT -->
+    <!-- قسم: المحتوى الرئيسي (قائمة البوستات) -->
     <div class="container  d-flex justify-content-center  mt-5  fs-4">
         <div class="col-9  ">
             <!-- posts -->
@@ -284,13 +296,6 @@
                     </div>
                     <!-- // post // -->
                 </div>
-                <!-- // posts //-->
-
-
-            </div>
-        </div>
-        <!-- // MAIN CONTENT // -->
-        <!-- ADD POST BTN -->
         <div style=" right: 24px; bottom: 24px; position: fixed; z-index: 10000; ">
             <button type="button" id="addbtn" onclick="addPostBtn()" class="btn    shadow  rounded-5"
                 style="background-color: #580097;color: #f9f3fe; width: 60px;height: 60px;border: none;--bs-btn-padding-x:none;">
@@ -301,11 +306,12 @@
                 </svg>
             </button>
         </div>
-        <!-- // ADD POST BTN // -->
-
+        <!-- // نهاية قسم زر إضافة بوست // -->
 
 </body>
+<!-- قسم: سكربتات المنطق المشترك وصفحة الهوم -->
 <script src="mainLogic.js"></script>
 <script src="HomeScripts.js"></script>
+<!-- // نهاية قسم السكربتات // -->
 
 </html>

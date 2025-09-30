@@ -1,4 +1,14 @@
-// هي للدوال الخاصة بصفحة HOME
+// ================================================
+// ملف: HomeScripts.js
+// الغرض: دوال وإجراءات صفحة "Home" المسؤولة عن:
+// - جلب البوستات مع دعم التحميل المتدرّج (Infinite Scroll).
+// - الانتقال لصفحات المستخدم/البوست عند النقر.
+// - إنشاء وتعديل البوستات عبر المودال، مع رفع الصور.
+// - إظهار/إخفاء مؤشر التحميل وفق حالة الشبكة.
+// ملاحظات:
+// - جميع النداءات إلى API تستخدم axios وتقرأ عنوان الـ API من `urlTrmeez` (مُعرّف عالمياً في `mainLogic.js`).
+// - التعليقات مُجزّأة على شكل فقرات لتوضيح الهدف من كل قسم ووظيفته.
+// ================================================
 
 signInUser()
 
@@ -7,7 +17,13 @@ lastPage = 1
 currentpage = 1
 let loading = false
 
-//============ infinite scroll ==============
+// -----------------------------------------------
+// قسم: التمرير اللانهائي (Infinite Scroll)
+// الفكرة:
+// - عند الوصول إلى نهاية الصفحة، نجلب الصفحة التالية من البوستات إذا كان هناك صفحات متبقية
+//   ولم تكن هناك عملية تحميل جارية بالفعل.
+// - يعتمد على `currentpage`, `lastPage`, و`loading` لمنع التكرار.
+// -----------------------------------------------
 
 window.addEventListener("scroll", () =>{
   const endOfPage = window.innerHeight + window.pageYOffset >= document.body.scrollHeight;
@@ -20,10 +36,18 @@ window.addEventListener("scroll", () =>{
   }
 
 });
-//============ //// infinite scroll ///// ==============
+// ------------ نهاية قسم التمرير اللانهائي ------------
 
 
-
+// -----------------------------------------------
+// دالة: postrequest(reload = true, page = 1)
+// الهدف:
+// - جلب قائمة البوستات من الخادم بحسب الصفحة.
+// - إذا كان `reload` = true يتم تفريغ الحاوية وإعادة البناء من جديد.
+// - يتم تحديث قيم الصفحات (`lastPage`) وإدارة حالة التحميل.
+// المخرجات:
+// - بناء بطاقات البوستات داخل عنصر `#posts`.
+// -----------------------------------------------
 function postrequest(reload = true ,page = 1 ) {
     toggleloader(true)
     loading = true
@@ -81,7 +105,7 @@ function postrequest(reload = true ,page = 1 ) {
                      </div>
                 `;
         document.getElementById("posts").innerHTML += content;
-    //  todo:لسا بدها شغل للتاغات
+    //  ملاحظة: التاغات بحاجة لتطوير لاحق (TODO)
         // const currenttagsID = `tags-${post.id}`
         // for(let tag of post.tags){
         //   console.log(tag.name)
@@ -106,15 +130,31 @@ function postrequest(reload = true ,page = 1 ) {
 postrequest();
 
 
+// -----------------------------------------------
+// دالة: userClicked(userId)
+// الهدف: الانتقال إلى صفحة بروفايل المستخدم بناءً على الـ id.
+// -----------------------------------------------
 function userClicked(userId){
     window.location = `profile.html?userId=${userId}`
 } 
 
+// -----------------------------------------------
+// دالة: postclicked(postId)
+// الهدف: الانتقال إلى صفحة تفاصيل البوست بناءً على الـ id.
+// -----------------------------------------------
 function postclicked(postId){
    window.location = `mainLogic.html?postId=${postId}`
 }
 
 
+// -----------------------------------------------
+// دالة: CreatePostBtn()
+// الهدف:
+// - تستخدم قيم الحقول في المودال لإنشاء بوست جديد أو تحديث بوست موجود.
+// - ترسل البيانات عبر FormData (العنوان، النص، الصورة) مع التوكين.
+// - بعد النجاح: تُغلق المودال، تُحدّث حالة تسجيل الدخول، وتعرض تنبيه نجاح، ثم تُعيد تحميل البوستات.
+// ملاحظة: تعتمد على وجود عناصر DOM والمكتبة Bootstrap لإدارة المودال.
+// -----------------------------------------------
 function CreatePostBtn(){
         const Title = document.getElementById("title-input").value
         const body = document.getElementById("message-text").value
@@ -175,6 +215,11 @@ function CreatePostBtn(){
 
 }
 
+// -----------------------------------------------
+// دالة: addPostBtn()
+// الهدف:
+// - تجهّز مودال "إنشاء بوست" بوضع الإنشاء (تفريغ الحقول/تعيين العناوين) ثم تعرض المودال.
+// -----------------------------------------------
 function addPostBtn(){
 document.getElementById("post_title_input").innerHTML = "Create Post"
 document.getElementById("title-input").value = ""
@@ -187,6 +232,10 @@ postModal.toggle()
 
 }
 
+// -----------------------------------------------
+// دالة: toggleloader(show = true)
+// الهدف: إظهار/إخفاء مؤشّر التحميل (#loder) من خلال خاصية visibility.
+// -----------------------------------------------
 function toggleloader(show = true){
 
   if(show){

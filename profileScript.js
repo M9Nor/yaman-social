@@ -1,7 +1,21 @@
-// هي للدوال الخاصة بصفحة PROFILE
+// ======================================================
+// ملف: profileScript.js
+// الغرض:
+// - دوال وإجراءات صفحة "Profile" لعرض بيانات المستخدم وبوستاته.
+// - جلب معلومات المستخدم، وعدّاداته، وقائمة بوستاته مع إتاحة التعديل/الحذف لمالكه.
+// ملاحظات:
+// - يعتمد على دوال مشتركة من `mainLogic.js` مثل: `toggleloader`, `CurrentUser`, `EditBtnClicked`, `DeleteBtnPost`.
+// - التعليقات هنا مُجزّأة لفقرات توضّح أهداف كل جزء ووظيفته.
+// ======================================================
 
 signInUser()
 postrequest();
+
+// ------------------------------------------------------
+// دالة: getCurrentUserId()
+// الهدف:
+// - قراءة `userId` من باراميترات رابط الصفحة لتحديد المستخدم المعروض.
+// ------------------------------------------------------
 function getCurrentUserId(){
  const urlParams = new URLSearchParams(window.location.search)
   const id= urlParams.get("userId")
@@ -9,6 +23,12 @@ return id
 }
  
 
+// ------------------------------------------------------
+// دالة: UserShowPost()
+// الهدف:
+// - جلب بيانات المستخدم (الاسم، البريد، اسم المستخدم، الصورة).
+// - بناء بطاقة البروفايل وعرض عدادات البوستات والتعليقات.
+// ------------------------------------------------------
   function UserShowPost(){
     const id = getCurrentUserId()
     toggleloader(true)
@@ -69,6 +89,12 @@ return id
 
 UserShowPost()
 
+// ------------------------------------------------------
+// دالة: postrequest()
+// الهدف:
+// - جلب بوستات المستخدم وعرضها في `#user_posts`.
+// - يضيف أزرار "Edit/Delete" للبوستات الخاصة بالمستخدم الحالي فقط.
+// ------------------------------------------------------
 function postrequest() {
    const id = getCurrentUserId()
    toggleloader(true)
@@ -118,12 +144,9 @@ function postrequest() {
                         </div> 
                      </div>
                 `;
-        document.getElementById("user_posts").innerHTML += content;
      }
     })
     .catch(function (error) {
       console.log(error);
     });
 }
-
-
